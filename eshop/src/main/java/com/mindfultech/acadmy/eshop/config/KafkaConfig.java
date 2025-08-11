@@ -1,9 +1,12 @@
 package com.mindfultech.acadmy.eshop.config;
 
+import com.mindfultech.acadmy.eshop.model.Order;
 import com.mindfultech.acadmy.eshop.model.OrderSerializer;
 import com.mindfultech.acadmy.eshop.model.OrderDeserializer;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.serialization.Deserializer;
+import org.apache.kafka.common.serialization.Serializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.context.annotation.Bean;
@@ -48,4 +51,15 @@ public class KafkaConfig {
     public NewTopic topic() {
         return new NewTopic(TOPIC_NAME, 1, (short) 1);
     }
+
+    @Bean
+    public Serializer<Order> orderSerializer() {
+        return new com.mindfultech.acadmy.eshop.model.OrderSerializer();
+    }
+
+    @Bean
+    public Deserializer<Order> orderDeserializer() {
+        return new com.mindfultech.acadmy.eshop.model.OrderDeserializer();
+    }
+
 }
