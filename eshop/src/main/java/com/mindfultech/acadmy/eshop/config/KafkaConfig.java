@@ -31,6 +31,7 @@ import java.util.Map;
 public class KafkaConfig {
 
     public static final String TOPIC_NAME = "orders";
+    public static final String DLQ_TOPIC = "orders-dlq";
 
     @Bean
     public ProducerFactory<String, Order> producerFactory() {
@@ -84,7 +85,7 @@ public class KafkaConfig {
 
     @Bean
     public NewTopic ordersDlqTopic() {
-        return new NewTopic("orders.DLQ", 1, (short) 1);
+        return new NewTopic(DLQ_TOPIC, 1, (short) 1);
     }
 
     @Bean
@@ -154,7 +155,11 @@ public class KafkaConfig {
     }
 
     @Bean
-    public DefaultErrorHandler defaultErrorHandler() {
+    public DefaultErrorHandler defaultErrorHandler(KafkaTemplate<?, ?> kafkaTemplate) {
+        // Create DeadLetterPublishingRecoverer pointing to DLQ topic
+        DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(kafkaTemplate,
+                (record, ex) -> new TopicPartition(KafkaConfig.DLQ_TOPIC, record.partition()));
+
         // Retry 3 times, with exponential backoff (starting at 1s, doubling each time)
         ExponentialBackOffWithMaxRetries backOff = new ExponentialBackOffWithMaxRetries(3);
         backOff.setInitialInterval(1000L);

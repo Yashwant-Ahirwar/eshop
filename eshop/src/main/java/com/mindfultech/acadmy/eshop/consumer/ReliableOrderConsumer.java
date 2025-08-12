@@ -15,7 +15,7 @@ public class ReliableOrderConsumer {
 
         // Simulate failure for testing DLQ
         if (order.getQuantity() < 0) {
-            throw new IllegalArgumentException("Invalid order amount");
+            throw new IllegalArgumentException("Invalid order quantity");
         }
 
         // Otherwise, process successfully
