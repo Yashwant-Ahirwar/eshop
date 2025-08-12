@@ -3,6 +3,8 @@ spring:
     consumer:
       group-id: order-group
       auto-offset-reset: earliest
+      enable-auto-commit: false
+      isolation-level: read_committed   # ensures consumers don't see uncommitted transaction writes
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: com.mindfultech.acadmy.eshop.model.OrderDeserializer
     producer:
@@ -20,6 +22,10 @@ spring:
         request.timeout.ms: 30000
         delivery.timeout.ms: 60000
         max.in.flight.requests.per.connection: 5
+        # Option A: use Spring Boot autoconfig to enable transactions (preferred)
+        transaction-id-prefix: reliable-tx-
+        key-serializer: org.apache.kafka.common.serialization.StringSerializer
+        value-serializer: org.apache.kafka.common.serialization.StringSerializer
     logging:
       level:
         org.apache.kafka: INFO
