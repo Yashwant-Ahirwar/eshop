@@ -8,3 +8,21 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: com.mindfultech.acadmy.eshop.model.OrderSerializer
+      # Reliability & retry tuning
+      properties:
+        acks: all
+        enable.idempotence: true
+        retries: 5
+        retry.backoff.ms: 100
+        linger.ms: 5
+        batch.size: 16384
+        compression.type: lz4
+        request.timeout.ms: 30000
+        delivery.timeout.ms: 60000
+        max.in.flight.requests.per.connection: 5
+    logging:
+      level:
+        org.apache.kafka: INFO
+        org.springframework.kafka: INFO
+
+
