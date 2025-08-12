@@ -30,5 +30,7 @@ spring:
       level:
         org.apache.kafka: INFO
         org.springframework.kafka: INFO
+    listener:
+      ack-mode: record
 
 

@@ -83,6 +83,11 @@ public class KafkaConfig {
     }
 
     @Bean
+    public NewTopic ordersDlqTopic() {
+        return new NewTopic("orders.DLQ", 1, (short) 1);
+    }
+
+    @Bean
     public Serializer<Order> orderSerializer() {
         return new com.mindfultech.acadmy.eshop.model.OrderSerializer();
     }
